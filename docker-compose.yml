@@ -3,9 +3,40 @@ version: "3.7"
 services:
   postgres:
     image: postgres:latest
+    container_name: taxi_db
     ports:
-      - "5433:5433"
+      - "5432:5432"
     environment:
-      POSTGRES_USER=: postgres
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: taxi
+
+  scheduler:
+    image: taxi-service:latest
+    container_name: scheduler
+    ports:
+      - "8080:8080"
+    environment:
+      - YANDEX_CLID=id
+      - YANDEX_APIKEY=key
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://taxi_db:5432/taxi
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin

@@ -1,11 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/taxi
+    url: jdbc:postgresql://localhost:5432/taxi
     username: postgres
     password: postgres
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     database: postgresql
     show-sql: true
 
@@ -19,3 +20,13 @@ yandex:
   url: https://taxi-routeinfo.taxi.yandex.net/taxi_info
   clid: ${YANDEX_CLID}
   apiKey: ${YANDEX_APIKEY}
+
+management:
+  endpoints.web.exposure.include: 'prometheus, health'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true

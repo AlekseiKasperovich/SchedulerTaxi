@@ -1,8 +1,7 @@
 package com.senla.model;
 
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class Price {
@@ -11,5 +10,4 @@ public class Price {
     public String currency;
     public double distance;
     public String time_text;
-
 }
